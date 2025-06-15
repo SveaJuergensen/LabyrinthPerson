@@ -26,8 +26,9 @@ public class World {
 	/** The player's end position in the world. */
 	private int goalX = 0;
 	private int goalY = 0;
-	/** The victory status (true if game has been won */
+	/** The victory status (true if game has been won) */
 	private boolean victory = false;
+	private boolean defeat = false;
 
 	/** The wall configuration of the labyrinth */
 	private final boolean[][] walls;
@@ -51,6 +52,7 @@ public class World {
 		this.goalX = goalX;
 		this.goalY = goalY;
 		this.victory = false;
+		this.defeat = false;
 		this.walls = walls;
 		this.hammers = hammers;
 		// To do: Ensure that walls has correct dimensions (height x width)
@@ -96,9 +98,6 @@ public class World {
 		playerX = Math.max(0, playerX);
 		playerX = Math.min(getWidth() - 1, playerX);
 		this.playerX = playerX;
-
-		checkIfWon();
-		updateViews();
 	}
 
 	/**
@@ -119,9 +118,6 @@ public class World {
 		playerY = Math.max(0, playerY);
 		playerY = Math.min(getHeight() - 1, playerY);
 		this.playerY = playerY;
-
-		checkIfWon();
-		updateViews();
 	}
 
 	/**
@@ -145,7 +141,7 @@ public class World {
 	/**
 	 * Tells us if the game has already been won
 	 *
-	 * @return boolean value, true if player position = goal position
+	 * @return boolean value, true if player position = goal position at any time in the past
 	 */
 	public boolean getVictoryStatus() {
 		return this.victory;
@@ -153,7 +149,30 @@ public class World {
 
 	public void checkIfWon() {
 		if (!this.victory) {
-			this.victory = (playerX == goalX && playerY == goalY);
+			if (playerX == goalX && playerY == goalY) {
+				this.victory = true;
+				// Remove all enemies once game is won
+				this.enemies.clear();
+			}
+		}
+	}
+
+	/**
+	 * Tells us if the game has already been lost
+	 *
+	 * @return boolean value, true if player position = enemy position for any enemy at some point in the past
+	 */
+	public boolean getDefeatStatus() {
+		return this.defeat;
+	}
+
+	public void checkIfLost() {
+		if (!this.defeat) {
+			for (int i = 0; i < this.enemies.size(); i++) {
+				if (playerX == enemies.get(i).getX() && playerY == enemies.get(i).getY()) {
+					this.defeat = true;
+				}
+			}
 		}
 	}
 
@@ -197,6 +216,9 @@ public class World {
 			setPlayerX(newX);
 			setPlayerY(newY);
 		}
+		checkIfWon();
+		checkIfLost();
+		updateViews();
 	}
 
 	/**

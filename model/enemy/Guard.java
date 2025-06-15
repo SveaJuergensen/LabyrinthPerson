@@ -16,16 +16,24 @@ public class Guard extends Enemy {
         System.out.println("Random num: " + randomNum);
         switch(randomNum) {
             case 1:
-                super.setX(super.getX()-1, boardWidth);
+                if (!walls[super.getY()][super.getX()-1]) {
+                    super.setX(super.getX()-1, boardWidth);
+                }
                 break;
             case 2:
-                super.setX(super.getX()+1, boardWidth);
+                if (!walls[super.getY()][super.getX()+1]) {
+                    super.setX(super.getX()+1, boardWidth);
+                }
                 break;
             case 3:
-                super.setY(super.getY()-1, boardHeight);
+                if (!walls[super.getY()-1][super.getX()]) {
+                    super.setY(super.getY()-1, boardWidth);
+                }
                 break;
             case 4:
-                super.setY(super.getY()+1,  boardHeight);
+                if (!walls[super.getY()+1][super.getX()]) {
+                    super.setY(super.getY()+1, boardWidth);
+                }
                 break;
         }
     }

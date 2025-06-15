@@ -42,6 +42,7 @@ public class GraphicView extends JPanel implements View {
 
 	/** Game status */
 	private boolean victory = false;
+	private boolean defeat = false;
 	/** Number of hammers left to the player */
 	private int hammers = 0;
 	/** Enemies */
@@ -55,8 +56,11 @@ public class GraphicView extends JPanel implements View {
 		// Paint background, make whole field white if game has been won
 		g.setColor(Color.WHITE);
 		g.fillRect(bg.x, bg.y, bg.width+3*fieldDimension.width, bg.height);
-		if (!victory) {
-			g.setColor(Color.RED);
+		if (!victory && !defeat) {
+			g.setColor(Color.LIGHT_GRAY);
+			g.fillRect(bg.x, bg.y, bg.width, bg.height);
+		} else if (defeat) {
+			g.setColor(Color.DARK_GRAY);
 			g.fillRect(bg.x, bg.y, bg.width, bg.height);
 		}
 		// Paint goal
@@ -125,6 +129,9 @@ public class GraphicView extends JPanel implements View {
 
 		// Update victory status
 		victory = world.getVictoryStatus();
+		defeat = world.getDefeatStatus();
+		System.out.println("Victory: " + victory);
+		System.out.println("Defeat: " + defeat);
 
 		repaint();
 	}
