@@ -67,6 +67,7 @@ public class Controller extends JFrame implements KeyListener, ActionListener, M
 			world.movePlayer(Direction.RIGHT);
 			break;
 		}
+		world.moveEnemies();
 	}
 
 	@Override

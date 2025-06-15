@@ -1,6 +1,9 @@
 package view;
 
+import java.util.ArrayList;
+
 import model.World;
+import model.enemy.Enemy;
 
 /**
  * A view that prints the current state of the world to the console upon every
@@ -19,8 +22,20 @@ public class ConsoleView implements View {
 
 		for (int row = 0; row < world.getHeight(); row++) {
 			for (int col = 0; col < world.getWidth(); col++) {
-				// If the player is here, print #, otherwise print .
-				if (row == playerY && col == playerX) {
+
+				// Check for enemies on this tile
+				ArrayList<Enemy> enemies = world.getEnemies();
+				boolean enemyHere = false;
+				for (int i = 0; i < enemies.size(); i++) {
+					if (enemies.get(i).getX() == col && enemies.get(i).getY() == row) {
+						enemyHere = true;
+					}
+				}
+
+				// Print tile
+				if (enemyHere) {
+					System.out.print("O");
+				} else if (row == playerY && col == playerX) {
 					System.out.print("#");
 				} else if (row == goalY && col == goalX) {
 					System.out.print("X");

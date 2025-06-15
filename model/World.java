@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 
 import view.View;
+import model.enemy.Enemy;
 
 /**
  * The world is our model. It saves the bare minimum of information required to
@@ -32,6 +33,8 @@ public class World {
 	private final boolean[][] walls;
 	/** Number of hammers the player has left */
 	private int hammers = 0;
+	/** Enemies */
+	private ArrayList<Enemy> enemies = new ArrayList<>();
 
 	/** Set of views registered to be notified of world updates. */
 	private final ArrayList<View> views = new ArrayList<>();
@@ -39,7 +42,7 @@ public class World {
 	/**
 	 * Creates a new world with the given size.
 	 */
-	public World(int width, int height, int startX, int startY, int goalX, int goalY, boolean[][] walls, int hammers) {
+	public World(int width, int height, int startX, int startY, int goalX, int goalY, boolean[][] walls, int hammers, ArrayList<Enemy> enemies) {
 		// Normally, we would check the arguments for proper values
 		this.width = width;
 		this.height = height;
@@ -51,6 +54,7 @@ public class World {
 		this.walls = walls;
 		this.hammers = hammers;
 		// To do: Ensure that walls has correct dimensions (height x width)
+		this.enemies = enemies;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -161,6 +165,10 @@ public class World {
 		return hammers;
 	}
 
+	public ArrayList<Enemy> getEnemies() {
+		return enemies;
+	}
+
 	///////////////////////////////////////////////////////////////////////////
 	// Player Management
 	
@@ -191,7 +199,17 @@ public class World {
 		}
 	}
 
-	///////////////////////////////////////////////////////////////////////////
+	/**
+	 * Moves the enemies (according to their specific behavior as defined in subclass).
+	 *
+	 */
+	public void moveEnemies() {
+		for (int i = 0; i < enemies.size(); i++) {
+			enemies.get(i).move(walls, playerX, playerY, height, width);
+		}
+	}
+
+		///////////////////////////////////////////////////////////////////////////
 	// View Management
 
 	/**

@@ -37,11 +37,15 @@ public class GraphicView extends JPanel implements View {
 	private final Rectangle goal = new Rectangle(1, 1);
 	/** A wall rectangle. */
 	private final ArrayList<Rectangle> walls = new ArrayList<Rectangle>();
+	/** An enemy. */
+	private final Rectangle enemy = new Rectangle(1, 1);
 
 	/** Game status */
 	private boolean victory = false;
 	/** Number of hammers left to the player */
 	private int hammers = 0;
+	/** Enemies */
+	private ArrayList<Rectangle> enemies = new ArrayList<>();
 
 	/**
 	 * Creates a new instance.
@@ -66,7 +70,12 @@ public class GraphicView extends JPanel implements View {
 			g.setColor(Color.BLACK);
 			g.fillRect(walls.get(i).x, walls.get(i).y, walls.get(i).width, walls.get(i).height);
 		}
-		// Level
+		// Paint enemies (Same size as player)
+		for (int i = 0; i < enemies.size(); i++) {
+			g.setColor(Color.YELLOW);
+			g.fillOval(enemies.get(i).x, enemies.get(i).y, player.width, player.height);
+		}
+		// Number of hammers left
 		String h = Integer.toString(hammers);
 		g.drawString(h,WIDTH+fieldDimension.width,HEIGHT/2);
 	}
@@ -90,17 +99,25 @@ public class GraphicView extends JPanel implements View {
 
 		// Update wall locations
 		walls.clear();
-		// System.out.println(world.getHeight());
-		// System.out.println(world.getWidth());
 		for (int i = 0; i < world.getHeight(); i++) {
 			for (int j = 0; j < world.getWidth(); j++) {
 				if (world.isWall(i,j)) {
 					Rectangle w = new Rectangle(1, 1);
 					w.setSize(fieldDimension);
-					w.setLocation(j*fieldDimension.width, i*fieldDimension.width);
+					w.setLocation(j*fieldDimension.width, i*fieldDimension.height);
 					walls.add(w);
 				}
 			}
+		}
+
+		// Update enemy locations
+		enemies.clear();
+		for (int i = 0; i < world.getEnemies().size(); i++) {
+			Rectangle e = new Rectangle(1, 1);
+			e.setSize(fieldDimension);
+			e.setLocation(world.getEnemies().get(i).getX()*fieldDimension.width,
+					world.getEnemies().get(i).getY()*fieldDimension.height);
+			enemies.add(e);
 		}
 
 		// Update number of hammers left to player
